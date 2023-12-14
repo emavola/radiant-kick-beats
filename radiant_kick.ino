@@ -1,3 +1,13 @@
+/*
+    File: radiant_kick_beats.ino
+    Description: Arduino program for the Radiant Kick Beat project, which combines sound detection with dynamic LED illumination in response to kicks or hits.
+    Authors: Emanuele Volanti
+    Date of Creation: 7/12/2023
+
+    This program uses an Adafruit NeoPixel strip for visual output and a sound sensor module connected to analog input A0 to detect percussive events.
+    The LED strip responds to kicks by creating vibrant light patterns.
+*/
+
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
