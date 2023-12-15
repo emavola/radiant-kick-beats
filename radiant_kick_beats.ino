@@ -34,12 +34,16 @@ float red = 255;
 int green = 255;
 int TRESHOLD = 500;
 
-bool isMenu = false;
+
 
 const int BUFFER_SIZE = 5;
 int audioBuffer[BUFFER_SIZE];
-int bufferIndex = -1;
+int bufferIndex = -2;
 int prevKick = 0;
+
+bool isMenu = false;
+const int MENU_PATTERN[] = {1000, 1000, 12, 123, 11, 293};
+const int DELTA_ERROR = 100;
 
 void loop() {
   red = random(0, 255);
@@ -58,6 +62,11 @@ void loop() {
     printArray(audioBuffer, BUFFER_SIZE);
     trigger(10, 10, 10);
   }
+}
+
+void checkMenu(){
+  // TODO: this method check if the menu is triggered
+  return null;
 }
 
 void trigger(int durationFadeIn, int durationFadeOut, int sustain) {
@@ -86,11 +95,11 @@ void fadeOut(int duration) {
   }
 }
 
-void printArray(int array[], int size) {
+void printArray(int array[], int lunghezza) {
   Serial.print("Array: ");
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < lunghezza; i++) {
     Serial.print(array[i]);
-    if (i < size - 1) {
+    if (i < lunghezza - 1) {
       Serial.print(", ");
     }
   }
