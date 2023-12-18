@@ -1,6 +1,7 @@
 /*
     File: radiant_kick_beats.ino
-    Description: Arduino program for the Radiant Kick Beat project, which combines sound detection with dynamic LED illumination in response to kicks or hits.
+    Description: Arduino program for the Radiant Kick Beat project,
+    which combines sound detection with dynamic LED illumination in response to kicks or hits.
     Authors: Emanuele Volanti
     Date of Creation: 7/12/2023
 
@@ -36,14 +37,14 @@ int TRESHOLD = 500;
 
 
 
-const int BUFFER_SIZE = 5;
+const int BUFFER_SIZE = 6;
 int audioBuffer[BUFFER_SIZE];
-int bufferIndex = -2;
+int bufferIndex = 0;
 int prevKick = 0;
+const float CODE_ARR[] = {1, 0.5, 0.5, 1, 2, 1};
+const float DELTA_ERROR = 0.10;
 
 bool isMenu = false;
-const int MENU_PATTERN[] = {1000, 1000, 12, 123, 11, 293};
-const int DELTA_ERROR = 100;
 
 void loop() {
   red = random(0, 255);
@@ -55,18 +56,26 @@ void loop() {
   //Serial.println(audioBuffer);
   if (a > TRESHOLD) {
     int currKick = millis();
-    Serial.println(bufferIndex);
-    audioBuffer[(bufferIndex + 1) % BUFFER_SIZE] = currKick - prevKick;
+    audioBuffer[bufferIndex] = currKick - prevKick;
     bufferIndex = (bufferIndex + 1) % BUFFER_SIZE;
     prevKick = currKick;
-    printArray(audioBuffer, BUFFER_SIZE);
+    if (checkMenu()){
+      Serial.println("MENU");
+    }
     trigger(10, 10, 10);
   }
 }
 
-void checkMenu(){
-  // TODO: this method check if the menu is triggered
-  return null;
+bool checkMenu(){
+  for (int steps = 0; steps < BUFFER_SIZE; steps++) {
+    int index = (bufferIndex + steps) % BUFFER_SIZE;
+    float ratio = (float) audioBuffer[index] / audioBuffer[bufferIndex];
+    if (ratio < CODE_ARR[steps] - DELTA_ERROR || ratio > CODE_ARR[steps] + DELTA_ERROR) {
+      return false;
+    }
+  }
+  //printArray(audioBuffer, 6);
+  return true;
 }
 
 void trigger(int durationFadeIn, int durationFadeOut, int sustain) {
